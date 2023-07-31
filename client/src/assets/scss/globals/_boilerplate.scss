@@ -1,0 +1,17 @@
+@use '../utils' as u; 
+
+html {
+    box-sizing: border-box;
+    font-size: 100%;
+}
+
+body {
+    margin: 0; 
+    padding: 0; 
+    font-family: u.$font;
+    color: #fff
+}
+
+*, *::before, *::after {
+    box-sizing: inherit;
+}
