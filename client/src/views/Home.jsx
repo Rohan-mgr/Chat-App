@@ -6,6 +6,8 @@ import LoginImage350 from "../assets/images/banner-image-350.png"; // mobile;
 import ChatAppLogo from "../assets/images/chat-app-logo.png";
 import InputField from "../components/common/InputField";
 import Button from "../components/common/Button";
+import { useFormik } from "formik";
+import { userLoginSchema, userSignupSchema } from "../validation/validation";
 
 function Home() {
   const [formState, setFormState] = useState(false);
@@ -17,6 +19,19 @@ function Home() {
   const handleNavLoginClick = () => {
     setFormState(false);
   };
+
+  const formik = useFormik({
+    initialValues: {
+      fullName: "",
+      email: "",
+      password: "",
+    },
+    validationSchema: formState ? userSignupSchema : userLoginSchema,
+    onSubmit: (values, { resetForm }) => {
+      console.log(values);
+      resetForm();
+    },
+  });
 
   return (
     <div className="home">
@@ -39,7 +54,7 @@ function Home() {
           <img src={ChatAppLogo} width="150px" height="120px" alt="app-logo" />
         </div>
         <h3>Login To Start Conversation</h3>
-        <form>
+        <form onSubmit={formik.handleSubmit}>
           <div className="form__navigation">
             <div
               className={`form__navigation__nav ${
@@ -66,14 +81,35 @@ function Home() {
             unmountOnExit
           >
             <div className="from-group" ref={nodeRef}>
-              <InputField type="text" placeholder="Full Name" errorMsg="" />
+              <InputField
+                type="text"
+                placeholder="Full Name"
+                name="fullName"
+                errorMsg={formik.errors.fullName}
+                handleChange={formik.handleChange}
+                value={formik.values.fullName}
+              />
             </div>
           </CSSTransition>
           <div className="from-group">
-            <InputField type="email" placeholder="Email" errorMsg="" />
+            <InputField
+              type="email"
+              placeholder="Email"
+              errorMsg={formik.errors.email}
+              name="email"
+              handleChange={formik.handleChange}
+              value={formik.values.email}
+            />
           </div>
           <div className="from-group">
-            <InputField type="password" placeholder="Password" errorMsg="" />
+            <InputField
+              type="password"
+              placeholder="Password"
+              errorMsg={formik.errors.password}
+              name="password"
+              handleChange={formik.handleChange}
+              value={formik.values.password}
+            />
           </div>
           <Button type="submit">{!formState ? "Login" : "Sign Up"}</Button>
         </form>

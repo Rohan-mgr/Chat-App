@@ -3,18 +3,19 @@ import PropTypes from "prop-types";
 export default function InputField({
   type,
   placeholder,
-  onChange,
+  handleChange,
   value,
   errorMsg,
+  name,
 }) {
-  console.log(errorMsg);
   return (
     <div>
       <input
         className={`${errorMsg ? "inputRedBorder" : ""}`}
         type={type}
+        name={name}
         placeholder={placeholder || " "}
-        onChange={onChange}
+        onChange={handleChange}
         value={value}
       ></input>
       {errorMsg && <p className="errorMessage">{errorMsg}</p>}
@@ -24,8 +25,9 @@ export default function InputField({
 
 InputField.propTypes = {
   type: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
   placeholder: PropTypes.string,
-  onChange: PropTypes.func.isRequired,
+  handleChange: PropTypes.func.isRequired,
   value: PropTypes.string.isRequired,
   errorMsg: PropTypes.string,
 };
