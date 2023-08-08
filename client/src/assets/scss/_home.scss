@@ -19,6 +19,7 @@
     &__image {
         display: flex;
         color: #fff;
+        height: inherit;
         flex-direction: column;
         justify-content: flex-start;
         align-items: center;
@@ -74,26 +75,7 @@
                 padding: 5px;
             }
 
-            .signup-field-enter {
-                opacity: 0;
-                transform: scale(0.9);
-            }
-
-            .signup-field-enter-active {
-                opacity: 1;
-                transform: translateX(0);
-                transition: opacity 500ms, transform 500ms;
-            }
-
-            .signup-field-exit {
-                opacity: 1;
-            }
-
-            .signup-field-exit-active {
-                opacity: 0;
-                transform: scale(0.9);
-                transition: opacity 500ms, transform 500ms;
-            }
+            
             
             .form__navigation__nav{
                 flex: 1;
