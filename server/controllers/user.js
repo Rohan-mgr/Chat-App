@@ -62,3 +62,7 @@ exports.userLogin = async (req, res) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
+
+exports.getAllUsers = async (req, res) => {
+  // function for getting all users
+};
