@@ -7,6 +7,7 @@ export default function InputField({
   value,
   errorMsg,
   name,
+  handleBlur,
 }) {
   return (
     <div>
@@ -16,6 +17,7 @@ export default function InputField({
         name={name}
         placeholder={placeholder || " "}
         onChange={handleChange}
+        onBlur={handleBlur}
         value={value}
       ></input>
       {errorMsg && <p className="errorMessage">{errorMsg}</p>}
@@ -28,6 +30,7 @@ InputField.propTypes = {
   name: PropTypes.string.isRequired,
   placeholder: PropTypes.string,
   handleChange: PropTypes.func.isRequired,
+  handleBlur: PropTypes.func.isRequired,
   value: PropTypes.string.isRequired,
   errorMsg: PropTypes.string,
 };

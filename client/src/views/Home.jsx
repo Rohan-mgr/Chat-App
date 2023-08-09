@@ -8,16 +8,98 @@ import InputField from "../components/common/InputField";
 import Button from "../components/common/Button";
 import { useFormik } from "formik";
 import { userLoginSchema, userSignupSchema } from "../validation/validation";
+import Alert from "../components/common/Alert";
+import { userRegistration, userLogin } from "../services/user";
+import { useNavigate } from "react-router-dom";
+import { _setSecureLs } from "../utils/storage";
 
 function Home() {
+  const navigate = useNavigate();
   const [formState, setFormState] = useState(false);
-  const nodeRef = useRef(null);
+  const [alert, setAlert] = useState({
+    status: false,
+    title: "",
+    desc: "",
+    type: "",
+  });
+  const alertRef = useRef(null);
+  const inputRef = useRef(null);
+
+  const handleAlertClose = () => {
+    setAlert((prevState) => {
+      return {
+        ...prevState,
+        status: false,
+      };
+    });
+  };
 
   const handleNavSignUpClick = () => {
+    handleAlertClose();
     setFormState(true);
   };
   const handleNavLoginClick = () => {
+    handleAlertClose();
     setFormState(false);
+  };
+
+  const handleUserSignUp = async (values, resetForm) => {
+    try {
+      const response = await userRegistration(values);
+      setAlert((prevState) => {
+        return {
+          ...prevState,
+          status: true,
+          title: "Account Registered Successfully",
+          desc: response?.data?.message,
+          type: "success",
+        };
+      });
+      setFormState(false);
+    } catch (error) {
+      setAlert((prevState) => {
+        return {
+          ...prevState,
+          status: true,
+          title: "Unable To Register Account",
+          desc: error?.response?.data?.message,
+          type: "error",
+        };
+      });
+      console.log(error, "error frontend");
+    }
+    resetForm();
+  };
+  const handleUserLogin = async (values, resetForm) => {
+    try {
+      const response = await userLogin(values);
+      setAlert((prevState) => {
+        return {
+          ...prevState,
+          status: true,
+          title: "Account Verify Successfully",
+          desc: response?.data?.message,
+          type: "success",
+        };
+      });
+      _setSecureLs("auth", {
+        user: response?.data?.loggedInUser,
+        token: response?.data?.token,
+      });
+      navigate("dashboard");
+    } catch (error) {
+      setAlert((prevState) => {
+        return {
+          ...prevState,
+          status: true,
+          title: "Unable To Login",
+          desc: error?.response?.data?.message,
+          type: "error",
+        };
+      });
+      console.log(error, "error frontend");
+    }
+    resetForm();
   };
 
   const formik = useFormik({
@@ -27,10 +109,10 @@ function Home() {
       password: "",
     },
     validationSchema: formState ? userSignupSchema : userLoginSchema,
-    onSubmit: (values, { resetForm }) => {
-      console.log(values);
-      resetForm();
-    },
+    onSubmit: (values, { resetForm }) =>
+      !formState
+        ? handleUserLogin(values, resetForm)
+        : handleUserSignUp(values, resetForm),
   });
 
   return (
@@ -54,7 +136,25 @@ function Home() {
           <img src={ChatAppLogo} width="150px" height="120px" alt="app-logo" />
         </div>
         <h3>Login To Start Conversation</h3>
+
         <form onSubmit={formik.handleSubmit}>
+          <CSSTransition
+            in={alert?.status}
+            nodeRef={alertRef}
+            timeout={500}
+            classNames="signup-field"
+            unmountOnExit
+          >
+            <div ref={alertRef}>
+              <Alert
+                alertTitle={alert?.title}
+                alertDescription={alert?.desc}
+                type={alert?.type}
+                handleClose={handleAlertClose}
+                hideAlertBox={alert?.status}
+              />
+            </div>
+          </CSSTransition>
           <div className="form__navigation">
             <div
               className={`form__navigation__nav ${
@@ -75,18 +175,19 @@ function Home() {
           </div>
           <CSSTransition
             in={formState}
-            nodeRef={nodeRef}
+            nodeRef={inputRef}
             timeout={500}
             classNames="signup-field"
             unmountOnExit
           >
-            <div className="from-group" ref={nodeRef}>
+            <div className="from-group" ref={inputRef}>
               <InputField
                 type="text"
                 placeholder="Full Name"
                 name="fullName"
-                errorMsg={formik.errors.fullName}
+                errorMsg={formik.touched.fullName && formik.errors.fullName}
                 handleChange={formik.handleChange}
+                handleBlur={formik.handleBlur}
                 value={formik.values.fullName}
               />
             </div>
@@ -95,9 +196,11 @@ function Home() {
             <InputField
               type="email"
               placeholder="Email"
-              errorMsg={formik.errors.email}
+              errorMsg={formik.touched.email && formik.errors.email}
               name="email"
               handleChange={formik.handleChange}
+              handleBlur={formik.handleBlur}
+              touched={formik.touched.email}
               value={formik.values.email}
             />
           </div>
@@ -105,9 +208,10 @@ function Home() {
             <InputField
               type="password"
               placeholder="Password"
-              errorMsg={formik.errors.password}
+              errorMsg={formik.touched.password && formik.errors.password}
               name="password"
               handleChange={formik.handleChange}
+              handleBlur={formik.handleBlur}
               value={formik.values.password}
             />
           </div>

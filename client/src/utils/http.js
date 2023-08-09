@@ -22,7 +22,7 @@ http.interceptors.response.use(
   function (res) {
     // Any status code that lie within the range of 2xx cause this function to trigger
     // Do something with response data
-    return res.data;
+    return res;
   },
   function (error) {
     // Any status codes that falls outside the range of 2xx cause this function to trigger
@@ -50,7 +50,7 @@ httpAuth.interceptors.request.use(
 
 httpAuth.interceptors.response.use(
   (res) => {
-    return res.data;
+    return res;
   },
   function (error) {
     // Any status codes that falls outside the range of 2xx cause this function to trigger

@@ -1,8 +1,8 @@
 import PropTypes from "prop-types";
 
-function Button({ type, children }) {
+function Button({ type, children, handleClick }) {
   return (
-    <button className="primary" type={type}>
+    <button type={type} className="primary" onClick={handleClick}>
       {children}
     </button>
   );
@@ -11,6 +11,7 @@ function Button({ type, children }) {
 Button.propTypes = {
   type: PropTypes.string.isRequired,
   children: PropTypes.string.isRequired,
+  handleClick: PropTypes.func,
 };
 
 export default Button;
