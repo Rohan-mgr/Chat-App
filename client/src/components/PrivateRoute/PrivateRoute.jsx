@@ -1,9 +1,10 @@
 import { Navigate } from "react-router-dom";
+import { _getSecureLs } from "../../utils/storage";
 import PropTypes from "prop-types";
 
 function PrivateRoute({ children }) {
-  const isLoggedIn = false;
-  if (!isLoggedIn) {
+  const { user } = _getSecureLs("auth");
+  if (!user) {
     return <Navigate to="/" replace />;
   }
   return children;

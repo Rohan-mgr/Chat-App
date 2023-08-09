@@ -9,9 +9,12 @@ import Button from "../components/common/Button";
 import { useFormik } from "formik";
 import { userLoginSchema, userSignupSchema } from "../validation/validation";
 import Alert from "../components/common/Alert";
-import { userRegistration } from "../services/user";
+import { userRegistration, userLogin } from "../services/user";
+import { useNavigate } from "react-router-dom";
+import { _setSecureLs } from "../utils/storage";
 
 function Home() {
+  const navigate = useNavigate();
   const [formState, setFormState] = useState(false);
   const [alert, setAlert] = useState({
     status: false,
@@ -32,11 +35,71 @@ function Home() {
   };
 
   const handleNavSignUpClick = () => {
+    handleAlertClose();
     setFormState(true);
   };
   const handleNavLoginClick = () => {
     handleAlertClose();
     setFormState(false);
+  };
+
+  const handleUserSignUp = async (values, resetForm) => {
+    try {
+      const response = await userRegistration(values);
+      setAlert((prevState) => {
+        return {
+          ...prevState,
+          status: true,
+          title: "Account Registered Successfully",
+          desc: response?.data?.message,
+          type: "success",
+        };
+      });
+      setFormState(false);
+    } catch (error) {
+      setAlert((prevState) => {
+        return {
+          ...prevState,
+          status: true,
+          title: "Unable To Register Account",
+          desc: error?.response?.data?.message,
+          type: "error",
+        };
+      });
+      console.log(error, "error frontend");
+    }
+    resetForm();
+  };
+  const handleUserLogin = async (values, resetForm) => {
+    try {
+      const response = await userLogin(values);
+      setAlert((prevState) => {
+        return {
+          ...prevState,
+          status: true,
+          title: "Account Verify Successfully",
+          desc: response?.data?.message,
+          type: "success",
+        };
+      });
+      _setSecureLs("auth", {
+        user: response?.data?.loggedInUser,
+        token: response?.data?.token,
+      });
+      navigate("dashboard");
+    } catch (error) {
+      setAlert((prevState) => {
+        return {
+          ...prevState,
+          status: true,
+          title: "Unable To Login",
+          desc: error?.response?.data?.message,
+          type: "error",
+        };
+      });
+      console.log(error, "error frontend");
+    }
+    resetForm();
   };
 
   const formik = useFormik({
@@ -46,33 +109,10 @@ function Home() {
       password: "",
     },
     validationSchema: formState ? userSignupSchema : userLoginSchema,
-    onSubmit: async (values, { resetForm }) => {
-      try {
-        const response = await userRegistration(values);
-        setAlert((prevState) => {
-          return {
-            ...prevState,
-            status: true,
-            title: "Account Registered Successfully",
-            desc: response?.data?.message,
-            type: "success",
-          };
-        });
-        console.log(response, response?.status);
-      } catch (error) {
-        setAlert((prevState) => {
-          return {
-            ...prevState,
-            status: true,
-            title: "Unable To Register Account",
-            desc: error?.response?.data?.message,
-            type: "error",
-          };
-        });
-        console.log(error, "error frontend");
-      }
-      resetForm();
-    },
+    onSubmit: (values, { resetForm }) =>
+      !formState
+        ? handleUserLogin(values, resetForm)
+        : handleUserSignUp(values, resetForm),
   });
 
   return (
