@@ -2,6 +2,7 @@ import Button from "../../components/common/Button";
 import { _remove } from "../../utils/storage";
 import { useNavigate } from "react-router-dom";
 import useFetchUsers from "../../hooks/useFetchUsers";
+import NameInitials from "../../components/common/NameInitials";
 
 function SideNav() {
   const navigate = useNavigate();
@@ -19,10 +20,11 @@ function SideNav() {
       </Button>
       {users.map((user) => {
         return (
-          <div key={user?._id}>
-            <h2>{user?.fullName}</h2>
-            <p>{user?.email}</p>
-          </div>
+          <NameInitials
+            key={user?._id}
+            name={user?.fullName}
+            message={"This is a message."}
+          />
         );
       })}
     </div>
