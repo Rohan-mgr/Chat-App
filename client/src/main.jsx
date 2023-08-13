@@ -4,8 +4,7 @@ import ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Home from "./views/Home";
 import Dashboard from "./views/Dashboard/Dashboard";
-import SideNav from "./views/Dashboard/SideNav";
-import Main from "./views/Dashboard/Main";
+import Chat from "./views/Dashboard/Chat";
 import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
 
 const router = createBrowserRouter([
@@ -21,8 +20,8 @@ const router = createBrowserRouter([
     ),
     children: [
       {
-        path: "dashboard",
-        element: <h1>Dashboard</h1>,
+        path: "chat/:userId",
+        element: <Chat />,
       },
     ],
   },

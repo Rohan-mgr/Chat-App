@@ -3,6 +3,7 @@ import { _remove } from "../../utils/storage";
 import { useNavigate } from "react-router-dom";
 import useFetchUsers from "../../hooks/useFetchUsers";
 import NameInitials from "../../components/common/NameInitials";
+import { BiLogOutCircle } from "react-icons/bi";
 
 function SideNav() {
   const navigate = useNavigate();
@@ -14,13 +15,18 @@ function SideNav() {
   };
   return (
     <div className="side__nav">
-      SideNav{" "}
-      <Button type="button" handleClick={handleLogout}>
-        Logout
-      </Button>
+      <div className="side__nav__header">
+        <h3>Chats</h3>
+        <div className="side__nav__header__button__wrapper">
+          <Button type="button" handleClick={handleLogout}>
+            Log Out
+          </Button>
+        </div>
+      </div>
       {users.map((user) => {
         return (
           <NameInitials
+            handleClick={() => navigate(`chat/${user?._id}`, { state: user })}
             key={user?._id}
             name={user?.fullName}
             message={"This is a message."}
