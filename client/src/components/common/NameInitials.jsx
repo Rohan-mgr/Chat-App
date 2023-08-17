@@ -1,8 +1,8 @@
 import nameInitials from "name-initials";
 
-function NameInitials({ name, message }) {
+function NameInitials({ name, message, handleClick }) {
   return (
-    <div className="name__initials">
+    <div className="name__initials" onClick={handleClick || null}>
       <div className="name__initials__wrapper">
         <span>{nameInitials(name)}</span>
       </div>

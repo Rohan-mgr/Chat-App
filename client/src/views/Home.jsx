@@ -86,7 +86,7 @@ function Home() {
         user: response?.data?.loggedInUser,
         token: response?.data?.token,
       });
-      navigate("dashboard");
+      navigate("chat/1");
     } catch (error) {
       setAlert((prevState) => {
         return {

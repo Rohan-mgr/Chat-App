@@ -47,6 +47,7 @@ exports.userLogin = async (req, res) => {
       {
         fullName: user?.fullName,
         email: user?.email,
+        userId: user?._id?.toString(),
       },
       process.env.JWT_TOKEN_SECRET,
       {
@@ -73,6 +74,31 @@ exports.getAllUsers = async (req, res) => {
     res
       .status(200)
       .json({ message: "All Users Fetched Successfully", users: users });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+exports.searchUser = async (req, res) => {
+  const query = req.query.q;
+
+  try {
+    const users = await User.find();
+    if (!users) {
+      return res.status(404).json({ message: "No Users Found" });
+    }
+
+    const searchResults = users.filter((user) => {
+      return user.fullName.toLowerCase().includes(query.toLowerCase());
+    });
+    if (!searchResults) {
+      return res.status(404).json({ message: "No Users Found" });
+    }
+    res.status(200).json({
+      message: "All Users Fetched Successfully",
+      users: searchResults,
+    });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Internal Server Error" });

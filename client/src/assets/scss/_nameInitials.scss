@@ -4,7 +4,9 @@
     display: flex;
     align-items: center;
     height: u.rem(70); 
+    border-radius: u.rem(7);
     width: 100%;
+    cursor: pointer;
 
     &:hover {
         background-color: #edecec;
@@ -17,10 +19,9 @@
         place-items: center;
         border-radius: 50%;
         min-width: u.rem(55);
-        width: calc(30% - 2rem);
         clip-path: circle(calc(100% - 2.5rem));
         background-color: rgb(127, 127, 203);
-        margin: 0 u.rem(13);
+        margin-right: u.rem(13);
 
         span {
             font-weight: 700;
