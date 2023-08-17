@@ -47,6 +47,7 @@ exports.userLogin = async (req, res) => {
       {
         fullName: user?.fullName,
         email: user?.email,
+        userId: user?._id?.toString(),
       },
       process.env.JWT_TOKEN_SECRET,
       {
