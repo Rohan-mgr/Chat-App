@@ -35,3 +35,16 @@ exports.handleChat = async (req, res) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
+
+exports.fetchChats = async (req, res) => {
+  try {
+    const chats = await Chat.find({
+      users: { $elemMatch: { $eq: req?.userId } },
+    })
+      .populate("users", "-password")
+      .sort({ updatedAt: -1 });
+    res.status(200).send(chats);
+  } catch (error) {
+    res.status(200).json({ message: "Internal Server Error" });
+  }
+};
