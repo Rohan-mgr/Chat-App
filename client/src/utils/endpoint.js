@@ -5,4 +5,9 @@ export const userEndpoints = {
   signup: config.baseURL + "/user/signup",
   login: config.baseURL + "/user/login",
   search: config.baseURL + "/user/search",
+  chats: config.baseURL + "/chat",
+};
+
+export const chatEndpoints = {
+  chats: config.baseURL + "/chat",
 };
