@@ -1,7 +1,7 @@
 import Button from "../../components/common/Button";
 import { _remove } from "../../utils/storage";
 import { useNavigate } from "react-router-dom";
-import useFetchUsers from "../../hooks/useFetchUsers";
+import useFetchChats from "../../hooks/useFetchChats";
 import NameInitials from "../../components/common/NameInitials";
 import { useFormik } from "formik";
 import { BsSearch } from "react-icons/bs";
@@ -9,7 +9,7 @@ import { searchUsers } from "../../services/user";
 
 function SideNav() {
   const navigate = useNavigate();
-  const { isLoading, users } = useFetchUsers();
+  const { isLoading, chats } = useFetchChats();
 
   const formik = useFormik({
     initialValues: {
@@ -53,12 +53,16 @@ function SideNav() {
         </form>
       </div>
       <div className="side__nav__users">
-        {users.map((user) => {
+        {chats?.map((chat) => {
           return (
             <NameInitials
-              handleClick={() => navigate(`chat/${user?._id}`, { state: user })}
-              key={user?._id}
-              name={user?.fullName}
+              handleClick={() =>
+                navigate(`chat/${chat?.users[0]?._id}`, {
+                  state: chat?.users[0],
+                })
+              }
+              key={chat?.users[0]?._id}
+              name={chat?.users[0]?.fullName}
               message={"This is a message."}
             />
           );
