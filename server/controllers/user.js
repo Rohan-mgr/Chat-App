@@ -51,7 +51,7 @@ exports.userLogin = async (req, res) => {
       },
       process.env.JWT_TOKEN_SECRET,
       {
-        expiresIn: "1h",
+        expiresIn: "1d",
       }
     );
 
