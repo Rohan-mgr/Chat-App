@@ -2,7 +2,6 @@ const Chat = require("../models/chat");
 
 exports.handleChat = async (req, res) => {
   const { id } = req.params;
-  console.log(id, req?.userId, "chat user & login user");
 
   if (!id) {
     return res.status(404).json({ message: "User does not Exists" });
@@ -11,16 +10,16 @@ exports.handleChat = async (req, res) => {
   try {
     let isChat = await Chat.find({
       $and: [
-        { users: { $elemMatch: { $eq: req?.userID } } },
-        { users: { $elemMatch: { $eq: req?.id } } },
+        { users: { $elemMatch: { $eq: id } } },
+        { users: { $elemMatch: { $eq: req?.userId } } },
       ],
     }).populate("users", "-password");
 
     if (isChat.length > 0) {
-      return res.status(200).send(isChat[0]);
+      throw new Error("Chat already exists");
     } else {
       const chatData = {
-        groupName: "group chat",
+        groupName: "one to one chat",
         users: [id, req?.userId],
       };
 
