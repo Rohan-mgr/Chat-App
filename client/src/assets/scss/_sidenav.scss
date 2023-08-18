@@ -10,6 +10,17 @@
         height: calc(100vh - u.rem(58) - u.rem(55) - u.rem(24));
         overflow-y: scroll;
     }
+    
+    &__searchedUsers {
+        margin-top: 1rem;
+        display: flex;
+        flex-direction: column;
+        height: calc(100vh - u.rem(58) - u.rem(55) - u.rem(24));
+        overflow-y: scroll;
+        position: absolute;
+        width: 30.7%;
+
+    }
 
     &__header {
         display: flex;

@@ -51,7 +51,7 @@ exports.userLogin = async (req, res) => {
       },
       process.env.JWT_TOKEN_SECRET,
       {
-        expiresIn: "1h",
+        expiresIn: "1d",
       }
     );
 
@@ -82,6 +82,7 @@ exports.getAllUsers = async (req, res) => {
 
 exports.searchUser = async (req, res) => {
   const query = req.query.q;
+  console.log(query);
 
   try {
     const users = await User.find();

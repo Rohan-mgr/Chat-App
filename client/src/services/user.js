@@ -1,7 +1,7 @@
 import { http } from "../utils/http";
 import { userEndpoints } from "../utils/endpoint";
 
-export const searchUsers = async ({ search }) => {
+export const searchUsers = async (search) => {
   const URL = userEndpoints.search + `?q=${search}`;
   const response = await http.get(URL);
   return response;

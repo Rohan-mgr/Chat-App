@@ -8,7 +8,7 @@ function NameInitials({ name, message, handleClick }) {
       </div>
       <div className="name__initials__content">
         <p>{name}</p>
-        <span>{message}</span>
+        {message && <span>{message}</span>}
       </div>
     </div>
   );
