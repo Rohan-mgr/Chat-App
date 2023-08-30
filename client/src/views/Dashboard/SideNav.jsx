@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import Button from "../../components/common/Button";
-import { _remove } from "../../utils/storage";
+import { _remove, _getSecureLs } from "../../utils/storage";
 import { useNavigate } from "react-router-dom";
 import useFetchChats from "../../hooks/useFetchChats";
 import NameInitials from "../../components/common/NameInitials";
@@ -9,12 +9,15 @@ import { BsSearch } from "react-icons/bs";
 import { startChat } from "../../services/chat";
 import { searchUsers } from "../../services/user";
 import ScaleLoader from "react-spinners/ScaleLoader";
+import ChatContext from "../../context/ChatContext";
 
 function SideNav() {
   const navigate = useNavigate();
+  const { setSelectedChat } = useContext(ChatContext);
   const [showSearch, setShowSearch] = useState(false);
   const [searchedUsers, setSearchedUsers] = useState([]);
   const { isLoading, chats, setChats } = useFetchChats();
+  const { user } = _getSecureLs("auth");
 
   const formik = useFormik({
     initialValues: {
@@ -92,15 +95,18 @@ function SideNav() {
             <ScaleLoader color="#0D6EFD" style={{ textAlign: "center" }} />
           ) : chats?.length > 0 ? (
             chats?.map((chat) => {
+              let toggleUser = chat.users[0]?._id === user?._id ? 1 : 0;
               return (
                 <NameInitials
-                  handleClick={() =>
-                    navigate(`chat/${chat?.users[0]?._id}`, {
-                      state: chat?.users[0],
-                    })
-                  }
-                  key={chat?.users[0]?._id}
-                  name={chat?.users[0]?.fullName}
+                  handleClick={() => {
+                    setSelectedChat(chat);
+                    console.log(chat, "chats");
+                    navigate(`chat/${chat?._id}`, {
+                      state: chat?.users[toggleUser],
+                    });
+                  }}
+                  key={chat?.users[toggleUser]?._id}
+                  name={chat?.users[toggleUser]?.fullName}
                   message={"This is a message."}
                 />
               );

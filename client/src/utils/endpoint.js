@@ -1,13 +1,15 @@
 import { config } from "../axios-config";
 
 export const userEndpoints = {
-  users: config.baseURL + "/user",
-  signup: config.baseURL + "/user/signup",
-  login: config.baseURL + "/user/login",
-  search: config.baseURL + "/user/search",
-  chats: config.baseURL + "/chat",
+  users: config.baseURL + "/api/user",
+  signup: config.baseURL + "/api/user/signup",
+  login: config.baseURL + "/api/user/login",
+  search: config.baseURL + "/api/user/search",
+  chats: config.baseURL + "/api/chat",
 };
 
 export const chatEndpoints = {
-  chats: config.baseURL + "/chat",
+  chats: config.baseURL + "/api/chat",
+  sendMessage: config.baseURL + "/api/message",
+  fetchMessages: config.baseURL + "/api/message",
 };

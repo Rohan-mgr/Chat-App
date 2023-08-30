@@ -1,4 +1,3 @@
-import React from "react";
 import "./assets/scss/style.scss";
 import ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
@@ -6,6 +5,8 @@ import Home from "./views/Home";
 import Dashboard from "./views/Dashboard/Dashboard";
 import Chat from "./views/Dashboard/Chat";
 import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
+import ChatState from "./context/ChatState";
+import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
 
 const router = createBrowserRouter([
   {
@@ -20,7 +21,7 @@ const router = createBrowserRouter([
     ),
     children: [
       {
-        path: "chat/:userId",
+        path: "chat/:chatId",
         element: <Chat />,
       },
     ],
@@ -32,7 +33,9 @@ const router = createBrowserRouter([
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <React.StrictMode>
+  // <React.StrictMode>
+  <ChatState>
     <RouterProvider router={router} />
-  </React.StrictMode>
+  </ChatState>
+  // </React.StrictMode>
 );
