@@ -95,6 +95,7 @@ function SideNav() {
             <ScaleLoader color="#0D6EFD" style={{ textAlign: "center" }} />
           ) : chats?.length > 0 ? (
             chats?.map((chat) => {
+              console.log(chat);
               let toggleUser = chat.users[0]?._id === user?._id ? 1 : 0;
               return (
                 <NameInitials
@@ -107,7 +108,7 @@ function SideNav() {
                   }}
                   key={chat?.users[toggleUser]?._id}
                   name={chat?.users[toggleUser]?.fullName}
-                  message={"This is a message."}
+                  message={chat?.latestMessage?.content}
                 />
               );
             })

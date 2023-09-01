@@ -1,6 +1,11 @@
+import { useEffect, useState } from "react";
 import nameInitials from "name-initials";
 
 function NameInitials({ name, message, handleClick }) {
+  const [msg, setMsg] = useState("");
+  useEffect(() => {
+    setMsg(message);
+  }, [msg]);
   return (
     <div className="name__initials" onClick={handleClick || null}>
       <div className="name__initials__wrapper">
@@ -8,7 +13,7 @@ function NameInitials({ name, message, handleClick }) {
       </div>
       <div className="name__initials__content">
         <p>{name}</p>
-        {message && <span>{message}</span>}
+        {msg && <span>{msg}</span>}
       </div>
     </div>
   );

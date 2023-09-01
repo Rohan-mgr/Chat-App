@@ -4,7 +4,7 @@ import { fetchMessages } from "../../services/chat";
 import { _getSecureLs } from "../../utils/storage";
 import ChatItem from "./ChatItem";
 import openSocket from "socket.io-client";
-// import { isLastMessage } from "../../helper/chat";
+import { isLastMessage } from "../../helper/chat";
 
 export default function ChatBody() {
   // const { selectedChat } = useContext(ChatContext);
@@ -44,14 +44,13 @@ export default function ChatBody() {
       return null;
     }
   };
-
   return (
     <div className="chat__body">
       {messages?.length > 0 ? (
         messages
           .slice()
           .reverse()
-          .map((m) => (
+          .map((m, index) => (
             <ChatItem
               key={m?._id}
               isSender={user?._id === m?.sender?._id ? true : false}
