@@ -12,4 +12,5 @@ export const chatEndpoints = {
   chats: config.baseURL + "/api/chat",
   sendMessage: config.baseURL + "/api/message",
   fetchMessages: config.baseURL + "/api/message",
+  createGroup: config.baseURL + "/api/chat/group-chat",
 };

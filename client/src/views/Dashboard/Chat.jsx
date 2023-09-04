@@ -6,11 +6,12 @@ import ChatBody from "../../components/common/ChatBody";
 function Chat() {
   const { chatId } = useParams();
   const { state } = useLocation();
+  console.log(state);
   return (
     <div className="chat">
       {chatId !== "1" ? (
         <>
-          <ChatHeader username={state?.fullName || " "} />
+          <ChatHeader username={state || " "} />
           {/* <h2>Name: {state?.fullName}</h2>
           <p>User email: {state?.email}</p>
           <p>User Id: {userId}</p> */}

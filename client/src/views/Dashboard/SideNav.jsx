@@ -9,11 +9,21 @@ import { BsSearch } from "react-icons/bs";
 import { startChat } from "../../services/chat";
 import { searchUsers } from "../../services/user";
 import ScaleLoader from "react-spinners/ScaleLoader";
-import ChatContext from "../../context/ChatContext";
+import Modal from "../../components/common/Modal";
+// import { SocketContext } from "../../context/socket.context";
+
+// import ChatContext from "../../context/ChatContext";
 
 function SideNav() {
   const navigate = useNavigate();
-  const { setSelectedChat } = useContext(ChatContext);
+  // const { setSelectedChat } = useContext(ChatContext);
+  // const { searchedUsers, setSearchedUsers } = useContext(SocketContext);
+
+  const [show, setShow] = useState(false);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
   const [showSearch, setShowSearch] = useState(false);
   const [searchedUsers, setSearchedUsers] = useState([]);
   const { isLoading, chats, setChats } = useFetchChats();
@@ -65,6 +75,7 @@ function SideNav() {
   };
   return (
     <div className="side__nav">
+      <Modal show={show} handleClose={handleClose} />
       <div className="side__nav__header">
         <h3>Chats</h3>
         <div className="side__nav__header__button__wrapper">
@@ -89,25 +100,31 @@ function SideNav() {
           />
         </form>
       </div>
+      <div>
+        <button onClick={handleShow}>Create Room</button>
+      </div>
       {!showSearch ? (
         <div className="side__nav__users">
           {isLoading ? (
             <ScaleLoader color="#0D6EFD" style={{ textAlign: "center" }} />
           ) : chats?.length > 0 ? (
             chats?.map((chat) => {
-              console.log(chat);
               let toggleUser = chat.users[0]?._id === user?._id ? 1 : 0;
+              let name = chat?.isGroupChat
+                ? chat?.groupName
+                : chat?.users[toggleUser]?.fullName;
+              console.log(name);
               return (
                 <NameInitials
                   handleClick={() => {
-                    setSelectedChat(chat);
-                    console.log(chat, "chats");
+                    // setSelectedChat(chat);
+                    // console.log(chat, "chats");
                     navigate(`chat/${chat?._id}`, {
-                      state: chat?.users[toggleUser],
+                      state: name,
                     });
                   }}
                   key={chat?.users[toggleUser]?._id}
-                  name={chat?.users[toggleUser]?.fullName}
+                  name={name}
                   message={chat?.latestMessage?.content}
                 />
               );
@@ -119,13 +136,14 @@ function SideNav() {
       ) : (
         <div className="side__nav__searchedUsers">
           {searchedUsers?.map((user) => {
+            console.log(user, "sidenav user");
             return (
               <NameInitials
                 handleClick={() => {
                   handleSearchedUserClick(user?._id);
                   formik.values.search = "";
                   navigate(`/chat/${user?._id}`, {
-                    state: user,
+                    state: user?.fullName,
                   });
                   setShowSearch(false);
                 }}
