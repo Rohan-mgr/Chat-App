@@ -1,5 +1,5 @@
-const Chat = require("../models/chat");
 const User = require("../models/user");
+const Chat = require("../models/chat");
 // const { client } = require("../utils/redis");
 
 exports.handleChat = async (req, res) => {
@@ -27,7 +27,6 @@ exports.handleChat = async (req, res) => {
     if (isChat.length > 0) {
       throw new Error("Chat already exists");
     } else {
-      console.log("inside else");
       const chatData = {
         groupName: "one to one chat",
         isGroupChat: false,
@@ -44,6 +43,42 @@ exports.handleChat = async (req, res) => {
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+exports.createGroupChat = async (req, res) => {
+  // console.log(req?.user);
+  // res.end();
+  if (!req.body.users || !req.body.roomName) {
+    return res.status(400).send({ message: "Please Fill all the feilds" });
+  }
+
+  var users = req.body.users;
+
+  if (users.length < 2) {
+    return res
+      .status(400)
+      .send("More than 2 users are required to form a group chat");
+  }
+
+  users.push(req?.userId);
+
+  try {
+    const groupChat = await Chat.create({
+      groupName: req.body.roomName,
+      users: users,
+      isGroupChat: true,
+      groupAdmin: req.user,
+    });
+
+    const fullGroupChat = await Chat.findOne({ _id: groupChat._id })
+      .populate("users", "-password")
+      .populate("groupAdmin", "-password");
+
+    res.status(200).json(fullGroupChat);
+  } catch (error) {
+    res.status(400);
+    throw new Error(error.message);
   }
 };
 
@@ -64,7 +99,7 @@ exports.fetchChats = async (req, res) => {
     //   return;
     // }
 
-    console.log(req?.userId);
+    // console.log(req?.userId);
     // const chats = await Chat.find({
     //   users: { $elemMatch: { $eq: req?.userId } },
     // })

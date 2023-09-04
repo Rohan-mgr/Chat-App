@@ -27,7 +27,27 @@ mongoose
 
     const io = socketIO.init(server);
     io.on("connection", (socket) => {
-      console.log("Client Connected");
+      console.log("Client Connected", socket?.id);
+
+      socket.on("disconnect", function () {
+        console.log("Client Disconnected!");
+      });
+
+      socket.on("create", function (room) {
+        console.log(room);
+        socket.join(room);
+      });
+
+      socket.on("new message", (newMessageRecieved) => {
+        var chat = newMessageRecieved.chat;
+        if (!chat.users) return console.log("chat.users not defined");
+
+        chat.users.forEach((user) => {
+          if (user._id == newMessageRecieved.sender._id) return;
+
+          socket.in(user._id).emit("message recieved", newMessageRecieved);
+        });
+      });
     });
   })
   .catch((error) => {
