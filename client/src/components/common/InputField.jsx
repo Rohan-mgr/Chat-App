@@ -25,12 +25,12 @@ export default function InputField({
   );
 }
 
-InputField.propTypes = {
-  type: PropTypes.string.isRequired,
-  name: PropTypes.string.isRequired,
-  placeholder: PropTypes.string,
-  handleChange: PropTypes.func.isRequired,
-  handleBlur: PropTypes.func.isRequired,
-  value: PropTypes.string.isRequired,
-  errorMsg: PropTypes.string,
-};
+// InputField.propTypes = {
+//   type: PropTypes.string.isRequired,
+//   name: PropTypes.string.isRequired,
+//   placeholder: PropTypes.string,
+//   handleChange: PropTypes.func.isRequired,
+//   handleBlur: PropTypes.func.isRequired,
+//   value: PropTypes.string.isRequired,
+//   errorMsg: PropTypes.string,
+// };

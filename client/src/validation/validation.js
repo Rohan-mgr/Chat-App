@@ -9,5 +9,8 @@ let userLoginSchema = yup.object({
   email: yup.string().email().required("Please Enter your Email"),
   password: yup.string().min(4).required("Please Enter your Password"),
 });
+let messageSchema = yup.object({
+  message: yup.string().min(1).required(""),
+});
 
-export { userSignupSchema, userLoginSchema };
+export { userSignupSchema, userLoginSchema, messageSchema };
