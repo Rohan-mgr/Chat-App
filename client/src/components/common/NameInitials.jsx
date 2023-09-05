@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import nameInitials from "name-initials";
 
 function NameInitials({ name, message, handleClick }) {
-  console.log(name);
   const [msg, setMsg] = useState("");
   useEffect(() => {
     setMsg(message);

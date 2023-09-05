@@ -6,7 +6,6 @@ import ChatBody from "../../components/common/ChatBody";
 function Chat() {
   const { chatId } = useParams();
   const { state } = useLocation();
-  console.log(state);
   return (
     <div className="chat">
       {chatId !== "1" ? (

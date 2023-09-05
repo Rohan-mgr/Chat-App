@@ -1,4 +1,4 @@
-import { useEffect, useContext } from "react";
+import React, { useEffect, useContext } from "react";
 import { useParams } from "react-router-dom";
 import { SocketContext } from "../../context/socket.context";
 import { fetchMessages } from "../../services/chat";
@@ -9,8 +9,6 @@ export default function ChatBody() {
   const { messages, setMessages } = useContext(SocketContext);
   const { user } = _getSecureLs("auth");
   const { chatId } = useParams();
-
-  console.log(messages, "from context api");
 
   useEffect(() => {
     const fetchChatMessages = async () => {
@@ -31,9 +29,8 @@ export default function ChatBody() {
           .slice()
           .reverse()
           .map((m, index) => {
-            console.log(m);
             return (
-              <>
+              <React.Fragment key={m?._id}>
                 <p
                   style={{
                     textAlign: user?._id === m?.sender?._id ? "right" : "left",
@@ -47,7 +44,7 @@ export default function ChatBody() {
                 >
                   {m?.content}
                 </ChatItem>
-              </>
+              </React.Fragment>
             );
           })
       ) : (

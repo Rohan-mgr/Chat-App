@@ -11,6 +11,7 @@ exports.handleChat = async (req, res) => {
 
   try {
     let isChat = await Chat.find({
+      isGroupChat: false,
       $and: [
         { users: { $elemMatch: { $eq: id } } },
         { users: { $elemMatch: { $eq: req?.userId } } },

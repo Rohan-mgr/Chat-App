@@ -6,6 +6,8 @@ import { BsSearch } from "react-icons/bs";
 import { searchUsers } from "../../services/user";
 import { SocketContext } from "../../context/socket.context";
 import { createGroupChat } from "../../services/chat";
+import { AiFillCloseCircle } from "react-icons/ai";
+import useFetchChats from "../../hooks/useFetchChats";
 
 export default function RoomModal({ show, handleClose }) {
   const { socket } = useContext(SocketContext);
@@ -13,11 +15,9 @@ export default function RoomModal({ show, handleClose }) {
   const [showSearch, setShowSearch] = useState(false);
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [roomName, setRoomName] = useState("");
+  const { chats, setChats } = useFetchChats();
 
-  useEffect(() => {
-    setSearchedUsers([]);
-    setSelectedUsers([]);
-  }, []);
+  console.log(chats);
   const formik = useFormik({
     initialValues: {
       search: "",
@@ -28,6 +28,12 @@ export default function RoomModal({ show, handleClose }) {
       setShowSearch(false);
     },
   });
+
+  useEffect(() => {
+    setSearchedUsers([]);
+    setSelectedUsers([]);
+    setRoomName("");
+  }, []);
 
   const handleInputChange = async (e) => {
     e.preventDefault();
@@ -51,6 +57,7 @@ export default function RoomModal({ show, handleClose }) {
     setSelectedUsers((prevState) => {
       return [...prevState, user];
     });
+    formik.values.search = "";
     setShowSearch(false);
   };
 
@@ -58,11 +65,21 @@ export default function RoomModal({ show, handleClose }) {
     try {
       const response = await createGroupChat(roomName, selectedUsers);
       console.log(response);
+      setChats((prevState) => {
+        return [response?.data, ...prevState];
+      });
     } catch (error) {
       console.log(error);
     }
     socket.emit("create", roomName);
     handleClose();
+  };
+
+  const handleUserRemove = (userId) => {
+    const updatedUserList = selectedUsers.filter(
+      (user) => user?._id !== userId
+    );
+    setSelectedUsers(updatedUserList);
   };
 
   return (
@@ -72,6 +89,7 @@ export default function RoomModal({ show, handleClose }) {
       </Modal.Header>
       <Modal.Body>
         <input
+          required
           className="mb-2"
           type="text"
           placeholder="Room Name"
@@ -82,7 +100,15 @@ export default function RoomModal({ show, handleClose }) {
         />
         <div className="selected__users">
           {selectedUsers.length > 0 &&
-            selectedUsers.map((user) => <p>{user?.fullName}</p>)}
+            selectedUsers.map((user) => (
+              <React.Fragment key={user?._id}>
+                <p>{user?.fullName}</p>{" "}
+                <AiFillCloseCircle
+                  onClick={() => handleUserRemove(user?._id)}
+                  style={{ marginTop: "-17px", cursor: "pointer" }}
+                />
+              </React.Fragment>
+            ))}
         </div>
         <div className="side__nav__search">
           <form onSubmit={formik.handleSubmit}>
@@ -105,6 +131,7 @@ export default function RoomModal({ show, handleClose }) {
           <div className="searched__users">
             {searchedUsers.map((user) => (
               <p
+                key={user?._id}
                 style={{ cursor: "pointer" }}
                 onClick={() => handleUserClick(user)}
               >
@@ -119,7 +146,7 @@ export default function RoomModal({ show, handleClose }) {
           Close
         </Button>
         <Button variant="success" onClick={handleCreateRoom}>
-          Create Room
+          Create Now
         </Button>
       </Modal.Footer>
     </Modal>

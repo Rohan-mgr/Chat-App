@@ -63,6 +63,11 @@ function SideNav() {
       setChats((prevState) => {
         return [response?.data, ...prevState];
       });
+      formik.values.search = "";
+      navigate(`/chat/${response?.data?._id}`, {
+        state: response?.data?.users[0]?.fullName,
+      });
+      setShowSearch(false);
     } catch (error) {
       console.log(error);
       throw new Error(error);
@@ -101,7 +106,9 @@ function SideNav() {
         </form>
       </div>
       <div>
-        <button onClick={handleShow}>Create Room</button>
+        <button className="create__room__button" onClick={handleShow}>
+          + Create Room
+        </button>
       </div>
       {!showSearch ? (
         <div className="side__nav__users">
@@ -113,7 +120,6 @@ function SideNav() {
               let name = chat?.isGroupChat
                 ? chat?.groupName
                 : chat?.users[toggleUser]?.fullName;
-              console.log(name);
               return (
                 <NameInitials
                   handleClick={() => {
@@ -123,7 +129,7 @@ function SideNav() {
                       state: name,
                     });
                   }}
-                  key={chat?.users[toggleUser]?._id}
+                  key={chat?._id}
                   name={name}
                   message={chat?.latestMessage?.content}
                 />
@@ -136,16 +142,15 @@ function SideNav() {
       ) : (
         <div className="side__nav__searchedUsers">
           {searchedUsers?.map((user) => {
-            console.log(user, "sidenav user");
             return (
               <NameInitials
                 handleClick={() => {
                   handleSearchedUserClick(user?._id);
-                  formik.values.search = "";
-                  navigate(`/chat/${user?._id}`, {
-                    state: user?.fullName,
-                  });
-                  setShowSearch(false);
+                  // formik.values.search = "";
+                  // navigate(`/chat/1`, {
+                  //   state: user?.fullName,
+                  // });
+                  // setShowSearch(false);
                 }}
                 key={user?._id}
                 name={user?.fullName}
